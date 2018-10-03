@@ -13,3 +13,8 @@
   grid-column-start: $colStart;
   grid-column-end: $colEnd;
 }
+
+@mixin show-hover($color: null) {
+  cursor: pointer;
+  color: $color;
+}

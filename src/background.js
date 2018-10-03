@@ -7,7 +7,7 @@ const url = require('url')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let allWindows = new Set();
 
 // Keep a reference for dev mode
 let dev = false
@@ -23,16 +23,18 @@ if (process.platform === 'win32') {
   app.commandLine.appendSwitch('force-device-scale-factor', '1')
 }
 
-function createWindow(view) {
+const createWindow = exports.createWindow = (view) => {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
+  let newWindow = new BrowserWindow({
     width: 400,
     height: 600,
-    show: false
+    show: false,
+    // frame: false
   })
 
+  allWindows.add(newWindow);
   // and load the index.html of the app.
-  let indexPath
+  let indexPath;
 
   if (dev && process.argv.indexOf('--noDevServer') === -1) {
     indexPath = `http://localhost:8081?${view}`
@@ -40,24 +42,25 @@ function createWindow(view) {
     indexPath = `file://${path.join(__dirname, `index.html?${view}`)}`
   }
 
-  mainWindow.loadURL(indexPath)
+  newWindow.loadURL(indexPath)
 
   // Don't show until we are ready and loaded
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show()
+  newWindow.once('ready-to-show', () => {
+    newWindow.show()
 
     // Open the DevTools automatically if developing
     if (dev) {
-      mainWindow.webContents.openDevTools({ detach: true })
+      newWindow.webContents.openDevTools({ detach: true })
     }
   })
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
+  newWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    mainWindow = null
+    allWindows.delete(newWindow);
+    newWindow = null
   })
 }
 
@@ -80,7 +83,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
+  if (newWindow === null) {
     createWindow()
   }
 })
