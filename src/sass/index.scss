@@ -1,0 +1,12 @@
+/* Imports */
+@import './partials/_theme';
+@import './partials/_mixins';
+
+.grid {
+  @include create-grid(15, 20, 1fr, 100vh);
+}
+
+.header {
+  @include pos-to-grid(1, 2, 1, -1);
+  background: red;
+}

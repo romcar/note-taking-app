@@ -20,7 +20,7 @@ module.exports = merge(common, {
   },
   plugins: [
     new CopyWebpackPlugin([
-      {from: './src/package.json', to: './package.json'}
+      { from: './src/package.json', to: './package.json' }
     ])
   ],
 });

@@ -1,7 +1,7 @@
 'use strict'
 
 // Import parts of electron to use
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain } = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -26,8 +26,8 @@ if (process.platform === 'win32') {
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 440,
-    height: 1000,
+    width: 400,
+    height: 600,
     show: false
   })
 
@@ -57,12 +57,12 @@ function createWindow() {
 
     // Open the DevTools automatically if developing
     if (dev) {
-      mainWindow.webContents.openDevTools()
+      mainWindow.webContents.openDevTools({ detach: true })
     }
   })
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
+  mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.

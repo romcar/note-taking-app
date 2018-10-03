@@ -1,0 +1,15 @@
+@mixin create-grid( $rows: null, $cols: null, $size: 1fr, $height: null) {
+  display: grid;
+  height: $height;
+  grid-template-rows: repeat($rows, $size);
+  grid-template-columns: repeat($cols, $size);
+  // grid-gap: 5px;
+}
+
+@mixin pos-to-grid($rowStart: null, $rowEnd: null, $colStart: null, $colEnd: null) {
+  grid-row-start: $rowStart;
+  grid-row-end: $rowEnd;
+
+  grid-column-start: $colStart;
+  grid-column-end: $colEnd;
+}

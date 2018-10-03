@@ -1,8 +1,8 @@
 {
   "name": "electron-redux-react-boilerplate",
-  "productName": "ToDux",
+  "productName": "Note Taker",
   "version": "1.0.0",
-  "description": "Electron boilerplate with React, Redux, ReactBootstrap, Babel and Webpack",
+  "description": "Electron boilerplate with React, Babel and Webpack",
   "main": "background.js",
   "keywords": [],
   "author": "hydrocarbons",

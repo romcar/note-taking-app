@@ -1,21 +1,21 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Button, Image, Label, Well, ListGroup } from 'react-bootstrap';
-import logo from "./hycabp.png";
+
+import Home from './containers/Home';
 import { remote } from "electron";
 
+import './sass/index.scss';
+
 class App extends Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
-    return <Well>
-            <Image src={logo} alt="App Logo" height="64px"></Image>
-            <p>
-              React <sup><Label>Component</Label></sup>
-            </p>
-          </Well>;
+    return (<Home />)
   }
 }
 
 ReactDOM.render(
-  <App/>,
+  <App />,
   document.getElementById('react-div')
 );
