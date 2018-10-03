@@ -23,7 +23,7 @@ if (process.platform === 'win32') {
   app.commandLine.appendSwitch('force-device-scale-factor', '1')
 }
 
-function createWindow() {
+function createWindow(view) {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 400,
@@ -35,18 +35,9 @@ function createWindow() {
   let indexPath
 
   if (dev && process.argv.indexOf('--noDevServer') === -1) {
-    indexPath = url.format({
-      protocol: 'http:',
-      host: 'localhost:8081',
-      pathname: 'index.html',
-      slashes: true
-    })
+    indexPath = `http://localhost:8081?${view}`
   } else {
-    indexPath = url.format({
-      protocol: 'file:',
-      pathname: path.join(__dirname, 'index.html'),
-      slashes: true
-    })
+    indexPath = `file://${path.join(__dirname, `index.html?${view}`)}`
   }
 
   mainWindow.loadURL(indexPath)
@@ -73,7 +64,9 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createWindow("Home");
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

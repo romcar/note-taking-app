@@ -2,11 +2,93 @@
 @import './partials/_theme';
 @import './partials/_mixins';
 
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
 .grid {
   @include create-grid(15, 20, 1fr, 100vh);
+  grid-gap: 10px;
+}
+
+.menu {
+  z-index: 1;
+  padding: 10px;
+  &--button {
+    height: 10px;
+    padding: 5px;
+
+    svg:hover {
+      cursor: pointer;
+      color: $header--button-color-hover
+    }
+  }
+}
+
+
+.option {
+  display: inline-block;
+  margin: 0 7px;
+  padding: 2px;
+  &--text {
+    margin: 0 10px;
+    font-size: 14px;
+    width: 20px;
+  }
+
+  > svg {
+    margin: 0 10px;
+  }
+
+  &:hover {
+    background-color: lighten($header--background-color, 5%);
+    cursor: pointer;
+    border-radius: 20%;
+    color: $header--button-color-hover;
+  }
 }
 
 .header {
   @include pos-to-grid(1, 2, 1, -1);
-  background: red;
+  background: $header--background-color;
+  height: 45px;
+  color: $header--button-color;
+
+  &--menu{
+    &.hide {
+      visibility: hidden;
+      opacity: 0;
+
+      > .menu {
+        background: $header--background-color;
+      }
+    }
+
+    &.show  {
+      visibility: visible;
+      opacity: 1;
+      > .menu {
+        // height: 100px;
+        background: $header--background-color;
+      }
+    }
+  }
 }
+
+.header--title {
+  display: inline-block;
+  position: absolute;
+  top: 5px;
+  padding: 0 15px;
+}
+
+.home {
+  background: $background-color;
+}
+
+.thumbnails {
+  color: red;
+  padding: 5px;
+}
+
