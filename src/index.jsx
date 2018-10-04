@@ -18,10 +18,10 @@ class App extends Component {
   }
 
   // maps the views of the application
-  static Views() {
+  static Views(view) {
     return {
-      Home: <Home />,
-      Note: <Note />
+      Home: <Home view={view} />,
+      Note: <Note view={view} />
     }
   }
 
@@ -29,7 +29,7 @@ class App extends Component {
   static View(props) {
     let name = props.location.search.substr(1);
     console.log('Rendering: ', name);
-    let view = App.Views()[name];
+    let view = App.Views(name)[name];
     if (view === null) {
       throw new Error(`View ${name} is undefined. [index.jsx]`)
     }
@@ -41,7 +41,9 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route path="/" component={App.View} />
+          <Route path="/" render={(props) => {
+            return App.View(props)
+          }} />
         </Switch>
       </Router>
     )

@@ -8,19 +8,18 @@ export default class Home extends Component {
     super(props);
 
     this.state = {};
-
     /* Bindings */
     this.createNewWindowOfView = this.createNewWindowOfView.bind(this);
 
     this.menuOptions = [
       {
-        action: 'New Note',
+        action: 'New',
         icon: 'fas fa-plus fa-lg',
         cb: this.createNewWindowOfView,
         arg: "Note"
       },
       {
-        action: 'Open File',
+        action: 'Open',
         icon: 'far fa-folder-open fa-lg',
         cb: () => { }
       }
@@ -33,7 +32,8 @@ export default class Home extends Component {
   render() {
     return (
       <div className="grid home">
-        <Header menuOptions={this.menuOptions} />
+        <Header menuOptions={this.menuOptions} view={this.props.view} />
+        <input className="search" />
         <div className="thumbnails">Add Thumbnails and Search bar</div>
       </div>
     )

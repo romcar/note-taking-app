@@ -9,21 +9,28 @@ export default class componentName extends Component {
     this.menuOptions = [
       {
         action: 'Bookmark',
-        icon: 'far fa-bookmark fa-lg'
+        icon: 'far fa-bookmark fa-lg',
+        cb: () => console.log(('bookmark'))
+      },
+      {
+        action: 'Open',
+        icon: 'far fa-folder-open fa-lg',
+        cb: () => { }
       },
       {
         action: 'Save',
         icon: 'far fa-save',
-        cb: () => { console.log('save note') }
+        cb: () => console.log('save note')
       },
+
 
     ];
   }
   render() {
     return (
       <div className="grid note">
-        <Header menuOptions={this.menuOptions} />
-        <textarea className="note--text">Notes go here</textarea>
+        <Header menuOptions={this.menuOptions} view={this.props.view} />
+        <textarea className="note--text"></textarea>
       </div>
     )
   }

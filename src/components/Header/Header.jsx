@@ -11,20 +11,32 @@ export default (props) => {
 
     let isHidden = menu.classList.contains('hide');
 
+    let node = null;
+    let positions = [];
+
+    if (props.view === "Home") {
+      node = document.getElementsByClassName('thumbnails')[0];
+      positions.push('4/ 1/ -1/ -1', '3/ 1/ -1/ -1');
+    } else if (props.view === "Note") {
+      node = document.getElementsByClassName('note--text')[0];
+      console.log(node)
+      positions.push('3/1/-1/-1', '2/1/-1/-1');
+    }
+
+    console.log(node);
     if (isHidden) {
       menu.classList.remove('hide');
       menu.classList.add('show');
-      const thumbnails = document.getElementsByClassName('thumbnails')[0];
 
-      thumbnails.style.gridArea = '4/ 1/ -1/ -1';
+      node.style.gridArea = positions[0];
     } else {
       menu.classList.remove('show');
       menu.classList.add('hide');
 
-      const thumbnails = document.getElementsByClassName('thumbnails')[0];
-      thumbnails.style.gridArea = '3/ 1/ -1/ -1';
+      node.style.gridArea = positions[1];
     }
   }
+
   return (
     <div className="header">
       <div onClick={() => toggleMenu()} className="menu--button">
