@@ -21,11 +21,23 @@
   padding: 0 15px;
 }
 
-.home {
+.home,
+.note {
   background: $background-color;
 }
 
-.thumbnails {
+.note--text {
+  @include pos-to-grid(2, -1 ,1,-1);
+  background: none;
+  padding: 5px;
+  border: none;
+
+  &:focus {
+    outline: 0;
+  }
+}
+.thumbnails{
+  @include pos-to-grid(3, -1, 1, -1);
   color: red;
   padding: 5px;
 }

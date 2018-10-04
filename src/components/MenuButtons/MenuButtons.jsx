@@ -4,10 +4,22 @@ const MenuButtons = (props) => {
   return (
     <div className="menu">
       {props.menuOptions.map((opt, i) => {
-        return (<div key={i} className={`option ${opt.action.toLowerCase().replace(/\s/igm, '-')}`} >
-          <i className={`${opt.icon}`} ></i>
-          <p className="option--text">{opt.action}</p>
-        </div>)
+        return (
+          <div
+            key={i}
+            className={`option ${opt.action.toLowerCase().replace(/\s/igm, '-')}`}
+            onClick={!!opt.arg ? () => opt.cb(opt.arg) : opt.cb}
+          >
+            <i
+              className={`${opt.icon}`} >
+
+            </i>
+            <p
+              className="option--text">
+              {opt.action}
+            </p>
+          </div>
+        )
       })}
     </div >
   )
@@ -15,8 +27,10 @@ const MenuButtons = (props) => {
 
 MenuButtons.propTypes = {
   menuOptions: PropTypes.arrayOf(PropTypes.shape({
-    action: PropTypes.string,
-    icon: PropTypes.string
+    action: PropTypes.string.isRequired,
+    icon: PropTypes.string.isRequired,
+    cb: PropTypes.func.isRequired,
+    arg: PropTypes.string
   }))
 }
 

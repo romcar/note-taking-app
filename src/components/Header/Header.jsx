@@ -16,13 +16,13 @@ export default (props) => {
       menu.classList.add('show');
       const thumbnails = document.getElementsByClassName('thumbnails')[0];
 
-      thumbnails.style.gridArea = '3/ 1/ -1/ -1';
+      thumbnails.style.gridArea = '4/ 1/ -1/ -1';
     } else {
       menu.classList.remove('show');
       menu.classList.add('hide');
 
       const thumbnails = document.getElementsByClassName('thumbnails')[0];
-      thumbnails.style.gridArea = '2/ 1/ -1/ -1';
+      thumbnails.style.gridArea = '3/ 1/ -1/ -1';
     }
   }
   return (

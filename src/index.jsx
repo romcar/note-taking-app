@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 
 import Home from './containers/Home';
+import Note from './containers/Note';
 import { remote } from "electron";
 
 import './sass/index.scss';
@@ -20,6 +21,7 @@ class App extends Component {
   static Views() {
     return {
       Home: <Home />,
+      Note: <Note />
     }
   }
 
