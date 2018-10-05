@@ -32,7 +32,7 @@ export default class Home extends Component {
       <div className="grid home">
         <Header />
         <div className="container">
-          <Sidebar />
+          <Sidebar options={this.menuOptions} />
           <div className="thumbnails">
             {/* TODO Implement some sort of thumbnail system with tags */}
             Thumbnails here!
