@@ -1,7 +1,7 @@
 /* Imports */
 @import './partials/_theme';
 @import './partials/_mixins';
-@import './partials/_menu';
+@import './partials/_home';
 
 * {
   margin: 0px;
@@ -9,36 +9,30 @@
 }
 
 .grid {
-
   @include create-grid(15, 20, 1fr, 100vh);
-  grid-gap: 10px;
 }
 
-.header--title {
+.header {
+  @include pos-to-grid(1, 2, 1, -1);
+  background:blue;
+}
+
+.container {
+  @include pos-to-grid(2, -1, 1, -1);
+  background: green;
+}
+
+.sidebar{
   display: inline-block;
-  position: absolute;
-  top: 5px;
-  padding: 0 15px;
+  background: orange;
+  height: 100%;
+  width: 19%;
 }
 
-.home,
-.note {
-  background: $background-color;
+.thumbnails {
+  display: inline-block;
+  background: pink;
+  margin: 0 0.45vw;
+  height: 100%;
+  width: 80%;
 }
-
-.note--text {
-  @include pos-to-grid(2, -1 ,1,-1);
-  background: none;
-  padding: 5px;
-  border: none;
-
-  &:focus {
-    outline: 0;
-  }
-}
-.thumbnails{
-  @include pos-to-grid(3, -1, 1, -1);
-  color: red;
-  padding: 5px;
-}
-

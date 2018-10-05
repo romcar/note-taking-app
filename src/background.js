@@ -34,8 +34,8 @@ if (process.platform === 'win32') {
 const createWindow = exports.createWindow = (view) => {
   // Create the browser window.
   let newWindow = new BrowserWindow({
-    width: 400,
-    height: 600,
+    width: 600,
+    height: 800,
     show: false,
     // frame: false
   })
