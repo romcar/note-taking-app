@@ -14,9 +14,11 @@ module.exports = merge(common, {
   },
   output: {
     filename: 'htmlapp.js',
-    path: path.resolve(__dirname, 'build')
+    path: path.resolve(__dirname, 'build'),
+    publicPath: '/'
   },
   devServer: {
+    historyApiFallback: true,
     contentBase: './build',
     port: 8081,
     stats: {
@@ -30,14 +32,14 @@ module.exports = merge(common, {
         ['.'],
         { shell: true, env: process.env, stdio: 'inherit' }
       )
-      .on('close', code => process.exit(0))
-      .on('error', spawnError => console.error(spawnError))
+        .on('close', code => process.exit(0))
+        .on('error', spawnError => console.error(spawnError))
     }
   },
   plugins: [
     new CleanWebpackPlugin(['build', 'release']),
     new CopyWebpackPlugin([
-      {from: './template/index.html', to: './index.html'}
+      { from: './template/index.html', to: './index.html' }
     ])
   ]
- });
+});
