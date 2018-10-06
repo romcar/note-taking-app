@@ -33,13 +33,16 @@
 
   .sidebar--option {
     display: block;
-    height: 35px;
+    height: 15px;
     font-size: 12px;
     text-align: right;
-    padding-right: 10px;
+    border-radius: 20px;
+    padding: 5px 10px 5px 5px;
 
-    &:first-child{
-      padding-top: 10px;
+
+    &:hover{
+      background: rgba(0,0, 0, 0.15);
+      color: $white;
     }
   }
 
@@ -54,6 +57,24 @@
   position: absolute;
   background: pink;
   margin: 0 0.45vw;
+  padding-top: 20px;
   height: 93vh;
   width: 80%;
+}
+
+.thumbnail {
+  display: inline-block;
+  border: 1px solid black;
+  width: 200px;
+  height: 150px;
+  margin: 0 15px;
+
+  .new-note-icon{
+    display: inline-block;
+    padding: 30px 65px;
+
+    &:hover {
+      color: white;
+    }
+  }
 }

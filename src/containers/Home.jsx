@@ -3,15 +3,19 @@ import React, { Component } from 'react'
 /* Components */
 import Header from '../components/Header/Header';
 import Sidebar from '../components/Sidebar/Sidebar';
-
+import Thumbnails from '../components/Thumbnails/Thumbnails';
 import { remote } from 'electron';
 const mainProcess = remote.require('./background.js');
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      recentNotes: []
+    };
     /* Bindings */
+    // this.createNewNote = this.createNewNote.bind(this);
+
 
     this.menuOptions = [
       {
@@ -26,18 +30,13 @@ export default class Home extends Component {
       }
     ];
   }
-
   render() {
     return (
       <div className="grid home">
         <Header />
         <div className="container">
           <Sidebar options={this.menuOptions} />
-          <div className="thumbnails">
-            {/* TODO Implement some sort of thumbnail system with tags */}
-            Thumbnails here!
-            {/* NOTE map recently opened/used notes */}
-          </div>
+          <Thumbnails recentNotes={this.state.recentNotes} />
         </div>
       </div>
     )
