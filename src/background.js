@@ -45,9 +45,9 @@ const createWindow = exports.createWindow = (view) => {
   let indexPath;
 
   if (dev && process.argv.indexOf('--noDevServer') === -1) {
-    indexPath = `http://localhost:8081?${view}`
+    indexPath = `http://localhost:8081`
   } else {
-    indexPath = `file://${path.join(__dirname, `index.html?${view}`)}`
+    indexPath = `file://${path.join(__dirname, `index.html?`)}`
   }
 
   newWindow.loadURL(indexPath)
@@ -91,7 +91,7 @@ const getUserSelectedFilePath = exports.getUserSelectedFilePath = (triggeringWin
   if (!files) return;
 
   const file = files[0];
-  return file;
+  triggeringWindow.sender.send('open-file-reply', file);
 };
 
 const getFileContents = exports.getFileContents = (event, filePath) => {
@@ -136,5 +136,5 @@ app.on('activate', () => {
 
 /*============================================================================================  */
 ipcMain.on('load-file', getFileContents);
-
+ipcMain.on('open-file', getUserSelectedFilePath);
 /*============================================================================================  */

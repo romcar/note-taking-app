@@ -15,20 +15,12 @@ const createWindow = (view) => {
  *
  * @param {*} view
  */
-const openFile = (createNewWindow, view) => {
-  console.log(createNewWindow, view)
-  let currentWindow = remote.currentWindow;
-
-  if (createNewWindow) {
-    currentWindow = createWindow(view);
-  }
-  console.log(currentWindow)
-  // ipcRenderer.send('open-file', currentWindow)
-  setTimeout(() => { ipcRenderer.send('open-file', currentWindow) }, 1000);
+const openFile = () => {
+  ipcRenderer.send('open-file', remote.currentWindow)
 };
 
-const readFile = (filePath) => {
-  ipcRenderer.send('load-file', filePath, remote.currentWindow);
+const readFile = (event, filePath) => {
+  ipcRenderer.send('load-file', filePath);
 };
 
 
