@@ -33,7 +33,7 @@ export default class Home extends Component {
   render() {
     return (
       <div className="grid home">
-        <Header />
+        <Header {...this.props} />
         <div className="container">
           <Sidebar options={this.menuOptions} />
           <Thumbnails recentNotes={this.state.recentNotes} />

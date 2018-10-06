@@ -15,11 +15,11 @@ let menuOptions = [
   }
 ];
 
-export default () => {
+export default (props) => {
   return (
     <div className="note grid">
-      <Header />
-      <div className="container">
+      <Header {...props} />
+      <div className="container grid note--content">
         <Sidebar options={menuOptions} />
         {/* TODO Fix tab not putting multiple spaces. SUPER ANNOYING*/}
         <textarea className="note--text" />

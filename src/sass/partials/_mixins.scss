@@ -18,3 +18,9 @@
   cursor: pointer;
   color: $color;
 }
+
+@mixin connect-to-fas() {
+  > svg {
+    @content;
+  }
+}

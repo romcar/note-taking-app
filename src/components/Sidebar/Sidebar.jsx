@@ -2,7 +2,7 @@ import React from 'react'
 
 export default (props) => {
   return (
-    <div className="sidebar grid">
+    <div className="sidebar grid hide">
       {/* TODO Create Sidebar */}
       {/* NOTE Start off with notes only */}
       {/* SIDEBAR */}

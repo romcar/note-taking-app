@@ -7,6 +7,7 @@
 * {
   margin: 0px;
   padding: 0px;
+  font: main;
 }
 
 /* ANCHOR Grid Style*/
@@ -25,6 +26,17 @@
   background:blue;
   /* FIXME  Update header text color */
   color: $white;
+
+  & .menu-button{
+    @include connect-to-fas() {
+      margin: 10px;
+
+      /* ANCHOR Menu Button Hover */
+      &:hover {
+        color: red;
+      }
+    }
+  }
 }
 
 /* ANCHOR Container Style */
@@ -35,8 +47,8 @@
 
 /* ANCHOR Sidebar Style */
 .sidebar{
+  transition: all 0.3s linear;
   float:left;
-  display: inline-block;
   background: orange;
   height: 100%;
   width: 19%;
@@ -62,14 +74,24 @@
   }
 }
 
+.hide {
+  color: red;
+  // display: none;
+  width: 0;
+
+}
+
 /* ANCHOR Thumbnails Style */
 .thumbnails {
   display: inline-block;
+  transition: width 0.3s linear;
   position: absolute;
+  top: 53px;
+  right: 0;
   background: pink;
   margin: 0 0.45vw;
   padding-top: 20px;
-  height: 93vh;
+  height: 89.8vh;
   width: 80%;
 }
 
@@ -92,8 +114,13 @@
 
 /* ANCHOR Note Style */
 .note--text {
-  height: 92vh;
-  width: 77%;
+  transition: width 0.3s linear;
+  position: absolute;
+  top: 53px;
+  right: 0;
+  box-sizing: border-box;
+  height: 92.45vh;
+  width: 99.74vw;
   background: transparent;
   border: none;
   margin: 1px;
