@@ -45,16 +45,8 @@ class App extends Component {
               {...props} />
           }} />
           <Route exact path="/note" render={(props) => {
-            let note = {
-              id: 'new',
-              filePath: '',
-              wordCount: 0,
-              timeSpent: 0,
-              contents: ''
-            };
             return <Notes
               view="New Note"
-              note={note}
               {...props} />
           }} />
         </Switch>

@@ -33,14 +33,14 @@ if (process.platform === 'win32') {
  */
 const createWindow = exports.createWindow = (view) => {
   // Create the browser window.
-  let newWindow = new BrowserWindow({
+  let mainWindow = new BrowserWindow({
     width: 600,
     height: 800,
     show: false,
     // frame: false
   })
 
-  allWindows.add(newWindow);
+  allWindows.add(mainWindow);
   // and load the index.html of the app.
   let indexPath;
 
@@ -50,25 +50,25 @@ const createWindow = exports.createWindow = (view) => {
     indexPath = `file://${path.join(__dirname, `index.html?`)}`
   }
 
-  newWindow.loadURL(indexPath)
+  mainWindow.loadURL(indexPath);
 
   // Don't show until we are ready and loaded
-  newWindow.once('ready-to-show', () => {
-    newWindow.show()
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
 
     // Open the DevTools automatically if developing
     if (dev) {
-      newWindow.webContents.openDevTools({ detach: true })
+      mainWindow.webContents.openDevTools({ detach: true })
     }
   })
 
   // Emitted when the window is closed.
-  newWindow.on('closed', function () {
+  mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    allWindows.delete(newWindow);
-    newWindow = null
+    allWindows.delete(mainWindow);
+    mainWindow = null
   })
 }
 
@@ -93,7 +93,11 @@ const getUserSelectedFilePath = exports.getUserSelectedFilePath = (triggeringWin
   const file = files[0];
   triggeringWindow.sender.send('open-file-reply', file);
 };
-
+/**
+ * TODO Fill this in
+ * @param {event} event
+ * @param {string} filePath
+ */
 const getFileContents = exports.getFileContents = (event, filePath) => {
   let content = fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -107,7 +111,80 @@ const getFileContents = exports.getFileContents = (event, filePath) => {
   })
 }
 
+const saveFileChanges = (event, note) => {
+  console.log(arguments[2])
+  let tempNote = note;
+  let filePath = tempNote.note.filePath;
+  let fileLocation = null;
+  /* NOTE if the path is set to the default then save it in the local documents director under a new directory named notes. */
+  if (filePath.substr(1) === 'notes') {
+    filePath = app.getPath('documents') + filePath + '/';
 
+    if (tempNote.meta.fileName === 'note') {
+      fileLocation = filePath + tempNote.meta.fileName + `-${tempNote.meta.count}${tempNote.meta.extension}`;
+      tempNote.meta.fileName = tempNote.meta.fileName + `-${tempNote.meta.count}`;
+    } else {
+      fileLocation = filePath + tempNote.meta.fileName + tempNote.meta.extension;
+    }
+  }
+
+  /* If the file already exists */
+  if (fs.existsSync(fileLocation)) {
+    console.log('found the file');
+    /* TODO Write file */
+    fs.writeFile(fileLocation, tempNote.note.content, (err) => {
+      if (err) console.log(err);
+      console.log(`File written: ${fileLocation}`);
+      /* ANCHOR update-note */
+      console.log('BEFORE SENDING OVER IPC', tempNote);
+      console.log(tempNote.meta.fileName)
+      event.sender.send('save-file-reply', tempNote, false);
+    });
+  } else {
+    console.log(`Did not find file: ${fileLocation}`);
+    /* if the file does NOT exist */
+    fs.mkdir(filePath, (err) => {
+      if (err.code === "EEXIST") {
+        console.log(`Directory already exists: ${filePath}`);
+      } else {
+        /* TODO Error log this error if any */
+        dialog.showMessageBox({
+          type: 'error',
+          title: 'Oops, something went wrong!',
+          message: `
+          Oops something happened.
+          ${err.code}
+
+          ${err}`,
+          buttons: [
+            'Ok'
+          ],
+          defaultId: 0
+        })
+      }
+      fs.writeFile(fileLocation, tempNote.note.content, (err) => {
+        if (err) {
+          dialog.showMessageBox({
+            type: 'error',
+            title: 'Oops, something went wrong!',
+            message: `
+            Oops something happened.
+            ${err.code}
+
+            ${err}`,
+            buttons: [
+              'Ok'
+            ],
+            defaultId: 0
+          })
+        }
+        console.log(`File written: ${fileLocation}`);
+        /* ANCHOR update-note update-counter */
+        event.sender.send('save-file-reply', tempNote, true);
+      });
+    });
+  }
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -128,13 +205,14 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (newWindow === null) {
+  if (mainWindow === null) {
     createWindow()
   }
 })
 
 
-/*============================================================================================  */
+/*===============================================================================*/
 ipcMain.on('load-file', getFileContents);
 ipcMain.on('open-file', getUserSelectedFilePath);
-/*============================================================================================  */
+ipcMain.on('save-file', saveFileChanges);
+/*===============================================================================*/
