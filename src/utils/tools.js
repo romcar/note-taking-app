@@ -1,7 +1,16 @@
 import { remote, ipcRenderer } from 'electron';
+import { removeStopWordsAndPunctuation } from './removeStopWordsAndPunctuation';
 
-const defaultPathForNotes = '../../Notes';
 const mainProcess = remote.require('./background');
+
+console.log(Promise);
+
+const removeUnimportantCharactersAndSymbols = (string) => {
+  // console.log(string);
+  return new Promise(function (resolve, reject) {
+    resolve(removeStopWordsAndPunctuation(string));
+  });
+};
 
 /**
  * TODO Fill this in
@@ -27,20 +36,21 @@ const readFile = (event, filePath) => {
 };
 
 const saveFile = (note, cb) => {
-  // function updateCount(shouldUpdateCount, updatedNote) {
-  //   if (shouldUpdateCount) {
+  return removeUnimportantCharactersAndSymbols(note.note.content)
+    .then((tagArr) => {
+      note.meta.tags = tagArr;
+      ipcRenderer.send('save-file', note);
+    });
+}
 
-  //   };
-
-  //   cb(updatedNote);
-  // };
-  ipcRenderer.send('save-file', note);
-
+const countWords = (content) => {
+  return content.length > 0 ? content.match(/\b\w+\b/gim).length : 0;
 }
 
 module.exports = {
   createWindow,
+  countWords,
   openFile,
   readFile,
-  saveFile
+  saveFile,
 };

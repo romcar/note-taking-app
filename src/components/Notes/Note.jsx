@@ -7,7 +7,8 @@ import Sidebar from '../Sidebar/Sidebar'
 import {
   openFile,
   readFile,
-  saveFile
+  saveFile,
+  countWords
 } from '../../utils/tools';
 
 let menuOptions = [
@@ -32,7 +33,7 @@ export default class Note extends Component {
     /* TODO create time spent funtionality */
     /* TODO Create functionality that makes the tags IMPORTANT */
 
-    /* Bindings */
+    /* SECTION Bindings */
     this.handleFileLoad = this.handleFileLoad.bind(this);
     this.handleContentChange = this.handleContentChange.bind(this);
     this.handleFileSave = this.handleFileSave.bind(this);
@@ -41,6 +42,7 @@ export default class Note extends Component {
     this.delay = 5000;
     this.saveFileTimer = null;
     this.timerEvent = new CustomEvent('time-spent-timer', { detail: new Date() });
+    /* !SECTION  */
 
     this.state = {
       note: {
@@ -53,11 +55,13 @@ export default class Note extends Component {
       meta: {
         count: 0,
         fileName: `note`,
-        extension: '.txt'
+        extension: '.txt',
+        tags: []
       }
     }
   }
 
+  /* SECTION lifecycle methods */
   componentDidMount() {
     ipcRenderer.on('open-file-reply', this.handleReadFile);
     ipcRenderer.on('load-file-reply', this.handleFileLoad);
@@ -82,15 +86,28 @@ export default class Note extends Component {
     ipcRenderer.removeListener('open-file-reply');
     ipcRenderer.removeListener('load-file-reply');
   }
+  /* !SECTION  */
 
+  /* SECTION Methods */
   handleReadFile(event, filePath) {
     readFile(event, filePath);
-    this.setState({ filePath });
+    let tempState = this.state;
+
+    filePath = filePath.split('/');
+    tempState.meta.fileName = filePath[filePath.length - 1].split('.')[0];
+    tempState.meta.extension = '.' + filePath[filePath.length - 1].split('.')[1];
+    tempState.note.filePath = filePath.slice(0, -1).join('/');
+
+    this.setState(tempState);
   }
 
   handleFileLoad(event, content) {
-    this.setState({ content })
+    let tempState = this.state;
 
+    tempState.note.content = content;
+    tempState.note.wordCount = countWords(content);
+
+    this.setState(tempState);
   }
 
   handleFileSave() {
@@ -103,7 +120,6 @@ export default class Note extends Component {
 
     if (shouldIncrementCounter) {
       let currentNoteCount = localStorage.getItem('note-count');
-      console.log(currentNoteCount)
       localStorage.setItem('note-count', ++currentNoteCount);
     }
     this.setState(updatedNote);
@@ -111,13 +127,15 @@ export default class Note extends Component {
 
   handleContentChange() {
     let { value } = event.target;
-    let wordCount = value.length > 0 ? value.match(/\b\w+\b/gim).length : 0;
+    let wordCount = countWords(value);
     let noteInfo = Object.assign({}, this.state);
+
     noteInfo.note.content = value;
     noteInfo.note.wordCount = wordCount;
 
     this.setState(noteInfo)
   }
+  /* !SECTION  */
   render() {
     console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     console.log(this.state);
@@ -128,7 +146,7 @@ export default class Note extends Component {
         <div className="container grid note--content">
           <Sidebar options={menuOptions} />
           {/* TODO Fix tab not putting multiple spaces. SUPER ANNOYING*/}
-          <textarea onChange={this.handleContentChange} className="note--text" value={this.state.content} />
+          <textarea onChange={this.handleContentChange} className="note--text" value={this.state.note.content} />
         </div>
       </div>
     );

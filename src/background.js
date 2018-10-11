@@ -91,6 +91,8 @@ const getUserSelectedFilePath = exports.getUserSelectedFilePath = (triggeringWin
   if (!files) return;
 
   const file = files[0];
+  /* NOTE Add to recent documents. */
+  app.addRecentDocument(file);
   triggeringWindow.sender.send('open-file-reply', file);
 };
 /**
@@ -111,43 +113,44 @@ const getFileContents = exports.getFileContents = (event, filePath) => {
   })
 }
 
+/* SECTION Save file changes */
 const saveFileChanges = (event, note) => {
-  console.log(arguments[2])
   let tempNote = note;
   let filePath = tempNote.note.filePath;
   let fileLocation = null;
-  /* NOTE if the path is set to the default then save it in the local documents director under a new directory named notes. */
+  /* STUB if the path is set to the default then save it in the local documents director under a new directory named notes. */
   if (filePath.substr(1) === 'notes') {
     filePath = app.getPath('documents') + filePath + '/';
 
-    if (tempNote.meta.fileName === 'note') {
-      fileLocation = filePath + tempNote.meta.fileName + `-${tempNote.meta.count}${tempNote.meta.extension}`;
-      tempNote.meta.fileName = tempNote.meta.fileName + `-${tempNote.meta.count}`;
-    } else {
-      fileLocation = filePath + tempNote.meta.fileName + tempNote.meta.extension;
-    }
+    /* STUB default notes will have a /note file path and a note fileName */
   }
 
-  /* If the file already exists */
+  if (tempNote.meta.fileName === 'note') {
+    fileLocation = filePath + tempNote.meta.fileName + `-${tempNote.meta.count}${tempNote.meta.extension}`;
+    /* STUB  change the notes name if it is the default one.*/
+    tempNote.meta.fileName = tempNote.meta.fileName + `-${tempNote.meta.count}`;
+  } else {
+    /* STUB Use what is provided instead */
+    fileLocation = filePath + '/' + tempNote.meta.fileName + tempNote.meta.extension;
+  }
+
+  /* STUB If the file already exists */
   if (fs.existsSync(fileLocation)) {
     console.log('found the file');
-    /* TODO Write file */
     fs.writeFile(fileLocation, tempNote.note.content, (err) => {
       if (err) console.log(err);
       console.log(`File written: ${fileLocation}`);
-      /* ANCHOR update-note */
-      console.log('BEFORE SENDING OVER IPC', tempNote);
-      console.log(tempNote.meta.fileName)
+      /* STUB update-note ipc message */
       event.sender.send('save-file-reply', tempNote, false);
     });
   } else {
     console.log(`Did not find file: ${fileLocation}`);
-    /* if the file does NOT exist */
+    /* STUB If the directory does NOT exist make it */
     fs.mkdir(filePath, (err) => {
       if (err.code === "EEXIST") {
         console.log(`Directory already exists: ${filePath}`);
       } else {
-        /* TODO Error log this error if any */
+        /* STUB Error log this error if any */
         dialog.showMessageBox({
           type: 'error',
           title: 'Oops, something went wrong!',
@@ -162,6 +165,9 @@ const saveFileChanges = (event, note) => {
           defaultId: 0
         })
       }
+      console.log(fileLocation);
+
+      /* STUB  if the directory does exists then make the file*/
       fs.writeFile(fileLocation, tempNote.note.content, (err) => {
         if (err) {
           dialog.showMessageBox({
@@ -177,14 +183,17 @@ const saveFileChanges = (event, note) => {
             ],
             defaultId: 0
           })
+        } else {
+          console.log(`File written: ${fileLocation}`);
+          /* STUB Send message to renderer process with updated note and if we should update the counter.*/
+          event.sender.send('save-file-reply', tempNote, true);
         }
-        console.log(`File written: ${fileLocation}`);
-        /* ANCHOR update-note update-counter */
-        event.sender.send('save-file-reply', tempNote, true);
+
       });
     });
   }
 }
+/* !SECTION */
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -211,8 +220,8 @@ app.on('activate', () => {
 })
 
 
-/*===============================================================================*/
+/*SECTION IPC messages =============================================*/
 ipcMain.on('load-file', getFileContents);
 ipcMain.on('open-file', getUserSelectedFilePath);
 ipcMain.on('save-file', saveFileChanges);
-/*===============================================================================*/
+/*!SECTION =========================================================*/
