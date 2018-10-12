@@ -4,9 +4,9 @@ export default ({ match }) => {
   const toggleMenu = () => {
     let sidebar = document.getElementsByClassName("sidebar")[0];
     let isHidden = sidebar.classList.contains("hide");
-    let view = match.path.substr(1);
+    let view = match.path.split('/')[1];
     let content = null;
-
+    // console.log('view', match.path.split('/'));
     if (view === 'note') {
       content = document.getElementsByClassName('note--text')[0];
     } else {

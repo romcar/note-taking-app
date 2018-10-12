@@ -12,41 +12,66 @@ import { remote } from "electron";
 
 import './sass/index.scss';
 
-let recentDocuments = [
-  {
-    id: 'x1238v',
-    filePath: 'test path',
-    wordCount: 123,
-    timeSpent: 123871629,
-    contents: 'The little kitty with his pretty witty paws pounced on the pondering panda paul.'
-  },
-  {
-    id: '12k8c273',
-    filePath: 'test path',
-    wordCount: 123,
-    timeSpent: 123871629,
-    contents: 'The little kitty with his pretty witty paws pounced on the pondering panda paul.'
-  }
-];
+// let recentDocuments = [];
 
 class App extends Component {
   constructor(props) {
     super(props);
+
+    /* Bindings */
+    this.addToRecentNotes = this.addToRecentNotes.bind(this);
+
+    this.state = {
+      recentNotes: []
+    }
+    /* TODO Refactor to an object for O(1) look up */
+
   }
 
+  componentDidMount() {
+    if (this.state.recentNotes.length <= 1) {
+      let { recentNotes } = this.state;
+      let notes = JSON.parse(localStorage.getItem('recentNotes')) || [];
+      recentNotes = notes.length ? notes : [];
+      console.log('recent notes :', recentNotes);
+      window.recentNotes = recentNotes;
+      this.setState({ recentNotes });
+    }
+  }
+
+  addToRecentNotes(note, cb) {
+    let { recentNotes } = Object.assign({}, this.state);
+    recentNotes.push(note);
+    if (cb) {
+      cb();
+    }
+    console.log(JSON.stringify(recentNotes));
+
+    localStorage.setItem('recentNotes', JSON.stringify(recentNotes));
+    this.setState({ recentNotes });
+  }
   render() {
+    console.log(this.state)
     return (
       <Router>
         <Switch>
           <Route exact path="/" render={(props) => {
             return <Home
               view="Home"
-              recentDocuments={recentDocuments}
+              addToRecent={this.addToRecentNotes}
+              recentNotes={this.state.recentNotes}
               {...props} />
           }} />
-          <Route exact path="/note" render={(props) => {
+          <Route exact path="/note/new" render={(props) => {
             return <Notes
               view="New Note"
+              addToRecent={this.addToRecentNotes}
+              {...props} />
+          }} />
+          <Route exact path="/note/:noteId" render={(props) => {
+            return <Notes
+              view="Note"
+              addToRecent={this.addToRecentNotes}
               {...props} />
           }} />
         </Switch>

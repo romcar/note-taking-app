@@ -40,7 +40,8 @@ const saveFile = (note, cb) => {
     .then((tagArr) => {
       note.meta.tags = tagArr;
       ipcRenderer.send('save-file', note);
-    });
+    })
+    .catch(err => console.error(err));
 }
 
 const countWords = (content) => {
