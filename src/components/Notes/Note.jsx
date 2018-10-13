@@ -90,7 +90,7 @@ export default class Note extends Component {
 
         if (this.props.match.url !== '/note/new' && this.state.note.content === "") {
             let { noteId } = this.props.match.params;
-            let thisNote = JSON.parse(localStorage.getItem('recentNotes')).filter((ele) => ele.meta.fileName === noteId);
+            let thisNote = JSON.parse(localStorage.getItem('recentNotes')).filter((ele) => ele.note.id === noteId);
             this.setState(thisNote[0]);
         }
     }

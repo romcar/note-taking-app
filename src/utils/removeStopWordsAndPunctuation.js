@@ -167,7 +167,7 @@ let stopWords = [
 ];
 
 const removePunctuation = (string) => {
-  return string.replace(/[\.\!\?\,\:]/gim, '');
+  return string.replace(/[\.\!\?\,\:]/gim, ' ');
 };
 
 const removeBrackets = (string) => {
@@ -183,7 +183,9 @@ const unquoteWords = (string) => {
 }
 
 const removeSymbols = (string) => {
-  return string.replace(/[\~\-\&\/\=\;]/gim, " ");
+  /* NOTE remove @ signs that start a sentence (Code thing) */
+  string = string.replace(/[\s\@]/gim, ' ');
+  return string.replace(/[\~\-\&\/\=\;\\\+\*]/gim, " ");
 }
 
 const removeSpaces = (string) => {

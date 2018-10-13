@@ -6,12 +6,9 @@ import {
 } from 'react-router-dom';
 
 import Home from './containers/Home';
-import Notes from './components/Notes/Note'
-// import { remote } from "electron";
+import Notes from './components/Notes/Note';
 
 import './sass/index.scss';
-
-// let recentDocuments = [];
 
 class App extends Component {
   constructor(props) {
@@ -21,17 +18,18 @@ class App extends Component {
     this.addToRecentNotes = this.addToRecentNotes.bind(this);
 
     this.state = {
-      recentNotes: []
+      recentNotes: {}
     }
     /* TODO Refactor to an object for O(1) look up */
 
   }
 
   componentDidMount() {
-    if (this.state.recentNotes.length <= 1) {
+    if (Object.keys(this.state.recentNotes).length <= 1) {
       let { recentNotes } = this.state;
       let notes = JSON.parse(localStorage.getItem('recentNotes')) || [];
-      recentNotes = notes.length ? notes : [];
+
+      recentNotes = Object.keys(notes).length ? notes : {};
       console.log('recent notes :', recentNotes);
       this.setState({ recentNotes });
     }
@@ -39,7 +37,9 @@ class App extends Component {
 
   addToRecentNotes(note, cb) {
     let { recentNotes } = Object.assign({}, this.state);
-    recentNotes.push(note);
+
+    recentNotes[note.note.id] = Object.assign({}, note);
+
     if (cb) {
       cb();
     }

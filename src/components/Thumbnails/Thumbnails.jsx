@@ -2,20 +2,22 @@ import React from 'react'
 import { Link, Route } from 'react-router-dom';
 import Note from '../Notes/Note';
 export default (props) => {
+    let noteIds = Object.keys(props.recentNotes);
     return (
         <div className="thumbnails">
             {/* TODO Implement some sort of thumbnail system with tags */}
             {/* NOTE map recently opened/used notes */}
-            {props.recentNotes.length ? props.recentNotes.map((note) => {
+            {noteIds.length ? noteIds.map((noteId) => {
+                let currentNote = props.recentNotes[noteId];
                 return (
-                    <div key={`${note.meta.fileName}`} className={`thumbnail`}>
+                    <div key={`${currentNote.meta.fileName}`} className={`thumbnail`}>
                         <Link to={{
-                            pathname: `/note/${note.meta.fileName}`,
-                            state: note
+                            pathname: `/note/${noteId}`,
+                            state: currentNote
                         }}>
-                            <h3 className="thumbnail--header">{note.meta.fileName}</h3>
-                            <span className="thumbnail--word-count">{`Word Count: ${note.note.wordCount}`}</span>
-                            <span className="thumbnail--time-spent">{`Time Spent: ${note.timeSpent}`}</span>
+                            <h3 className="thumbnail--header">{currentNote.meta.fileName}</h3>
+                            <span className="thumbnail--word-count">{`Word Count: ${currentNote.note.wordCount}`}</span>
+                            <span className="thumbnail--time-spent">{`Time Spent: ${currentNote.note.timeSpent}`}</span>
                             {/* TODO add tags to thumbnails */}
                             {' '}tags here
                         </Link>
