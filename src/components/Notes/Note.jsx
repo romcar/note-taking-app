@@ -51,6 +51,8 @@ export default class Note extends Component {
         this.timerEvent = new CustomEvent('time-spent-timer', { detail: new Date() });
         /* !SECTION  */
         const maybeState = Object.assign({}, this.props.location.state);
+        console.log(maybeState);
+
         this.state = Object.keys(maybeState).length > 0 ? maybeState : {
             note: {
                 content: '',
@@ -135,7 +137,8 @@ export default class Note extends Component {
             let currentNoteCount = localStorage.getItem('note-count');
             localStorage.setItem('note-count', ++currentNoteCount);
         }
-        this.props.addToRecent(this.state, () => {
+
+        this.props.addToRecent(updatedNote, () => {
             this.setState(updatedNote);
         });
     }
@@ -154,8 +157,8 @@ export default class Note extends Component {
     render() {
         console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         console.log(this.state);
-        console.log(this.props.location.state);
-        console.log(this.props.match);
+        // console.log(this.props.location.state);
+        // console.log(this.props.match);
 
 
 

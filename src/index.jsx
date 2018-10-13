@@ -37,13 +37,12 @@ class App extends Component {
 
   addToRecentNotes(note, cb) {
     let { recentNotes } = Object.assign({}, this.state);
-
+    console.log(note)
+    console.log('note ^^^^^')
     recentNotes[note.note.id] = Object.assign({}, note);
-
     if (cb) {
       cb();
     }
-    console.log(JSON.stringify(recentNotes));
 
     localStorage.setItem('recentNotes', JSON.stringify(recentNotes));
     this.setState({ recentNotes });
