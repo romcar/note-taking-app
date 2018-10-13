@@ -1,6 +1,6 @@
 import { remote, ipcRenderer } from 'electron';
 import { removeStopWordsAndPunctuation } from './removeStopWordsAndPunctuation';
-
+import { v4 as uuid } from 'uuid';
 const mainProcess = remote.require('./background');
 
 console.log(Promise);
@@ -38,7 +38,13 @@ const readFile = (event, filePath) => {
 const saveFile = (note, cb) => {
   return removeUnimportantCharactersAndSymbols(note.note.content)
     .then((tagArr) => {
+
+      if (note.note.id === 'create') {
+        note.note.id = uuid();
+      }
+
       note.meta.tags = tagArr;
+      console.log(note);
       ipcRenderer.send('save-file', note);
     })
     .catch(err => console.error(err));

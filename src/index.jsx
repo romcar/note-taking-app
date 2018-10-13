@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-
 import {
   BrowserRouter as Router,
   Route, Switch
@@ -8,7 +7,7 @@ import {
 
 import Home from './containers/Home';
 import Notes from './components/Notes/Note'
-import { remote } from "electron";
+// import { remote } from "electron";
 
 import './sass/index.scss';
 
@@ -34,7 +33,6 @@ class App extends Component {
       let notes = JSON.parse(localStorage.getItem('recentNotes')) || [];
       recentNotes = notes.length ? notes : [];
       console.log('recent notes :', recentNotes);
-      window.recentNotes = recentNotes;
       this.setState({ recentNotes });
     }
   }

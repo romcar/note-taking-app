@@ -105,7 +105,7 @@ export default class Note extends Component {
     handleReadFile(event, filePath) {
         readFile(event, filePath);
         let tempState = this.state;
-
+        /* NOTE Grab the file path and seperate the file name from the pwd and file extension\ */
         filePath = filePath.split('/');
         tempState.meta.fileName = filePath[filePath.length - 1].split('.')[0];
         tempState.meta.extension = '.' + filePath[filePath.length - 1].split('.')[1];
