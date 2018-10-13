@@ -11,28 +11,6 @@ import {
     countWords
 } from '../../utils/tools';
 
-let menuOptions = [
-    {
-        action: 'Home',
-        icon: 'fas fas-home fa-lg',
-        cb: () => { },
-        arg: ['']
-
-    },
-    {
-        action: 'New',
-        icon: 'fas fa-plus fa-lg',
-        cb: () => { },
-        arg: ['']
-    },
-    {
-        action: 'Open',
-        icon: 'far fa-folder-open fa-lg',
-        cb: openFile,
-        arg: ['']
-    }
-];
-
 export default class Note extends Component {
     constructor(props) {
         super(props);
@@ -49,9 +27,31 @@ export default class Note extends Component {
         this.delay = 5000;
         this.saveFileTimer = null;
         this.timerEvent = new CustomEvent('time-spent-timer', { detail: new Date() });
+
         /* !SECTION  */
         const maybeState = Object.assign({}, this.props.location.state);
-        console.log(maybeState);
+
+        this.menuOptions = [
+            {
+                action: 'Home',
+                icon: 'fas fas-home fa-lg',
+                cb: () => this.props.history.push('/'),
+                arg: ['']
+
+            },
+            {
+                action: 'New',
+                icon: 'fas fa-plus fa-lg',
+                cb: () => { },
+                arg: ['']
+            },
+            {
+                action: 'Open',
+                icon: 'far fa-folder-open fa-lg',
+                cb: openFile,
+                arg: ['']
+            }
+        ];
 
         this.state = Object.keys(maybeState).length > 0 ? maybeState : {
             note: {
@@ -92,14 +92,15 @@ export default class Note extends Component {
 
         if (this.props.match.url !== '/note/new' && this.state.note.content === "") {
             let { noteId } = this.props.match.params;
-            let thisNote = JSON.parse(localStorage.getItem('recentNotes')).filter((ele) => ele.note.id === noteId);
-            this.setState(thisNote[0]);
+            let thisNote = JSON.parse(localStorage.getItem('recentNotes'))[noteId];
+            this.setState(thisNote);
         }
     }
 
     componentWillUnmount() {
-        ipcRenderer.removeListener('open-file-reply');
-        ipcRenderer.removeListener('load-file-reply');
+        ipcRenderer.removeListener('open-file-reply', this.handleReadFile);
+        ipcRenderer.removeListener('load-file-reply', this.handleFileLoad);
+        ipcRenderer.removeListener('save-file-reply', this.handleFileSaved);
     }
     /* !SECTION  */
 
@@ -166,7 +167,7 @@ export default class Note extends Component {
             <div className="note grid" >
                 <Header {...this.props} />
                 <div className="container grid note--content">
-                    <Sidebar options={menuOptions} />
+                    <Sidebar options={this.menuOptions} />
                     {/* TODO Fix tab not putting multiple spaces. SUPER ANNOYING*/}
                     <textarea onChange={this.handleContentChange} className="note--text" value={this.state.note.content} />
                 </div>
